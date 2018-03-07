@@ -1,0 +1,9 @@
+language: python
+python:
+  - "3.4"
+
+sudo: false
+cache: pip
+install: "pip install -r requirements.txt"
+install: "pip install ."
+script: (cd ./docs_gen && make html)

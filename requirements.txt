@@ -1,0 +1,4 @@
+sphinx
+sphinxcontrib-argdoc
+pandas==0.20.3
+numpy==1.14
