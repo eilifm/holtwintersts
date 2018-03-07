@@ -1,9 +1,12 @@
 language: python
 python:
+  - "3.3"
   - "3.4"
+  - "3.5"
+  - "3.6"
 
 sudo: false
 cache: pip
 install: "pip install -r requirements.txt"
 install: "pip install ."
-script: (cd ./docs_gen && make html)
+#script: (cd ./docs_gen && make html)
