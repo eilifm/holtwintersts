@@ -11,4 +11,4 @@ sudo: false
 cache: pip
 install: "pip install -r requirements.txt"
 install: "pip install ."
-script: exit #(cd ./docs_gen && make html)
+script: echo "done" #(cd ./docs_gen && make html)
