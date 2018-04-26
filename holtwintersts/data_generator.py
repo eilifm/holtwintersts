@@ -9,7 +9,7 @@ def rolling_window(a, window):
     return np.lib.stride_tricks.as_strided(a, shape=shape, strides=strides)
 
 
-def make_seasonal_data(seasons:list, trend:int, size:int, stdev:float, start_date='2000-01-01', scale=10):
+def univ_seasonal_gen(seasons:list, trend:int, size:int, stdev:float, start_date='2000-01-01', scale=10):
     """
     
     Parameters
@@ -31,15 +31,12 @@ def make_seasonal_data(seasons:list, trend:int, size:int, stdev:float, start_dat
         _sbase = np.sin(np.cumsum(_sbase))
 
         seasonal_data = np.add(seasonal_data, _sbase*seasons[season][1])
+    _trend_nd = np.cumsum(np.ones((size, 1))*trend)-1
+
+    out = np.add(seasonal_data, np.random.normal(0, stdev)) + _trend_nd + scale
 
 
-    return pd.DataFrame(
-                np.add(
-                    seasonal_data,
-                    np.random.normal(0, stdev)
-                    )+np.cumsum(np.zeros((size, 1))*trend/10)+scale,
-                index=pd.date_range(start_date, periods=size, freq='MS')
-    )
+
+    return pd.DataFrame(out, index=pd.date_range(start_date, periods=size, freq='MS'))
 
 
-print(make_seasonal_data([[12,6], [6, 3]], 20, 120, 1.0))
