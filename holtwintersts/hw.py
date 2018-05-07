@@ -126,7 +126,8 @@ class HoltWinters(object):
         # Let's init the seasonal factors and parameters
         seasons = seasons
         _s_factors = []
-        # Compute seasonal factors for each season
+
+        # Initialize seasonal factors for each season
         for season in seasons:
             _s_factors.append(
                 np.array([endog[per] / np.mean(endog[0:(season - 1)]) for per in range(season)]))
@@ -142,19 +143,21 @@ class HoltWinters(object):
         B[_max_season] = _B
         L[_max_season] = _L
 
-        # Iterative fit
+        # Iterative fit of y_hat components L, B, St
         for t in range(endog.shape[0] - _max_season):
             # shift iteration to end of longest complete season
             t += _max_season
-            print(t)
 
+            # Get seasonal factor indexes
             _st_pos = np.mod(np.ones(len(seasons)) * t, seasons)
 
             # Get an array of the respective seasonal factors
             _st = np.array([_s_factors[i][int(x)] for i, x in enumerate(_st_pos)])
 
+            # Compute Lt
             _L = alpha * (endog[t] - np.sum(_st)) + ((1 - alpha) * (L[t-1] - B[t-1]))
 
+            # Compute Bt
             _B = (beta * (_L - L[t-1])) + ((1 - beta) * B[t-1])
 
             for season, x in enumerate(_st_pos):
