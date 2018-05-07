@@ -12,20 +12,21 @@ from sklearn.model_selection import ParameterGrid
 #univ_test_data = univ_seasonal_gen([[7, 1], [12, 3]], .3, 120, 10, scale=15)
 data = pd.read_csv('./ClothingSales.csv', index_col=0)
 
-data['Sales'] = np.add(data['Sales'], np.random.normal(0, 5000, data.shape[0]))
+#data['Sales'] = np.add(data['Sales'], np.random.normal(0, 5000, data.shape[0]))
 
-smallest_params = (.75, .5, 0)
+smallest_params = (.75, .5, .1)
 #smallest_params = (1, 1, 1)
 
 best_hw = HoltWinters().fit(data, [12], *smallest_params)
 
+print(mean_squared_error(data['Sales'].iloc[12::], best_hw.fitted[12::]))
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
 # ax.plot(univ_test_data[96::])
-ax.plot(data)
+ax.plot(data.iloc[12::])
 
 # ax.plot(pd.Series(best_hw.predict(24), index=univ_test_data[96::].index))
-ax.plot(best_hw.fitted)
+ax.plot(best_hw.fitted[12::])
 # ax.plot(pd.Series(best_hw.fitted, index=univ_test_data[0:96].index))
 
 

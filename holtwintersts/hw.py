@@ -130,7 +130,7 @@ class HoltWinters(object):
         # Initialize seasonal factors for each season
         for season in seasons:
             _s_factors.append(
-                np.array([endog[per] / np.mean(endog[0:(season - 1)]) for per in range(season)]))
+                np.array([endog[per] - np.mean(endog[0:(season - 1)]) for per in range(season)]))
 
         _L = np.mean(endog[0:_max_season]) + np.sum([_s[-1] for _s in _s_factors])
 
@@ -142,7 +142,7 @@ class HoltWinters(object):
         B = np.zeros(endog.shape[0])
         B[_max_season] = _B
         L[_max_season] = _L
-
+        print(_s_factors[0])
         # Iterative fit of y_hat components L, B, St
         for t in range(endog.shape[0] - _max_season):
             # shift iteration to end of longest complete season
@@ -155,15 +155,19 @@ class HoltWinters(object):
             _st = np.array([_s_factors[i][int(x)] for i, x in enumerate(_st_pos)])
 
             # Compute Lt
-            _L = alpha * (endog[t] - np.sum(_st)) + ((1 - alpha) * (L[t-1] - B[t-1]))
+            _L = alpha * (endog[t] - np.sum(_st)) + ((1 - alpha) * (L[t-1] + B[t-1]))
 
             # Compute Bt
             _B = (beta * (_L - L[t-1])) + ((1 - beta) * B[t-1])
 
+            # Compute each St
             for season, x in enumerate(_st_pos):
                 _s_factors[season][int(x)] = (gamma * (endog[t] - _L)) + ((1-gamma) * _s_factors[season][int(_st_pos)])
 
+            # Retrieve new St
+            _st = np.array([_s_factors[i][int(x)] for i, x in enumerate(_st_pos)])
 
+            # Update the running arrays of Lt and Bt values
             L[t] = _L
             B[t] = _B
 
@@ -173,7 +177,6 @@ class HoltWinters(object):
             # Capture the residual
             resids[t] = y_hats[t] - endog[t]
 
-
         params = {'alpha': alpha,
                   'beta': beta,
                   'gamma': gamma,
@@ -181,7 +184,6 @@ class HoltWinters(object):
                   'B': _B,
                   's_factors': _s_factors,
                   'seasons': seasons}
-
 
         return HoltWintersResults(y_hats, resids, endog, index, params)
 
