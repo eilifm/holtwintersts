@@ -2,9 +2,6 @@ import pandas as pd
 import numpy as np
 
 
-#from statsmodels.tsa.base.tsa_model import TimeSeriesModel, TimeSeriesModelResults
-
-
 class HoltWintersResults(object):
     """
     Results class for HoltWinters
@@ -32,9 +29,10 @@ class HoltWintersResults(object):
     gamma: float
         Seasons estimate learning parameter
     L:
+        Final base level estimate
 
     B:
-
+        Final trend estimate
 
     """
     def __init__(self, fitted_values, resids, endog, index, params):
@@ -63,6 +61,7 @@ class HoltWintersResults(object):
         Parameters
         ----------
         num_oos: int
+            Number of periods out of sample to forecast
 
         Returns
         -------

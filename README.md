@@ -1,4 +1,4 @@
-# HoltWinters Time Series Forecasting
+# Holt Winter's Time Series Forecasting
 
 [![Build Status](https://travis-ci.org/eilifm/holtwintersts.svg?branch=master)](https://travis-ci.org/eilifm/holtwintersts)
 
@@ -13,6 +13,12 @@ Unfortunately I cannot host the docs on GitHub pages at this time. To view docum
 download this repository and open `docs/index.html` in your browser of choice.
 
 Docs of course can be built by `cd docs_gen && make html` from a bash shell. 
+
+# Installation
+1. Download or clone this repository.
+2. Point a shell with your target Python environment to this repo's folder on your machine.
+3. `pip install .` or `python setup.py install` or `python3 setup.py install`
+
 
 # Implementation
 ## Currently Implemented (original scope)
