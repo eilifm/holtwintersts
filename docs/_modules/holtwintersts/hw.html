@@ -40,9 +40,6 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
-<span class="c1">#from statsmodels.tsa.base.tsa_model import TimeSeriesModel, TimeSeriesModelResults</span>
-
-
 <div class="viewcode-block" id="HoltWintersResults"><a class="viewcode-back" href="../../holtwintersts.hw.html#holtwintersts.hw.HoltWintersResults">[docs]</a><span class="k">class</span> <span class="nc">HoltWintersResults</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Results class for HoltWinters</span>
@@ -70,9 +67,10 @@
 <span class="sd">    gamma: float</span>
 <span class="sd">        Seasons estimate learning parameter</span>
 <span class="sd">    L:</span>
+<span class="sd">        Final base level estimate</span>
 
 <span class="sd">    B:</span>
-
+<span class="sd">        Final trend estimate</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fitted_values</span><span class="p">,</span> <span class="n">resids</span><span class="p">,</span> <span class="n">endog</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
@@ -101,6 +99,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        num_oos: int</span>
+<span class="sd">            Number of periods out of sample to forecast</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
