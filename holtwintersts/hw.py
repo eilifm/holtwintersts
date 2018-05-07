@@ -6,7 +6,7 @@ import numpy as np
 
 
 class HoltWintersResults(object):
-    def __init__(self, fitted_values, endog, index, params):
+    def __init__(self, fitted_values, resids, endog, index, params):
         """
 
         Parameters
@@ -20,6 +20,7 @@ class HoltWintersResults(object):
 
         self.endog = endog
         self.index = index
+        self.resids = resids
 
         if isinstance(index, pd.Index):
             self.fitted = pd.DataFrame(self.fitted, index=self.index)
@@ -123,43 +124,50 @@ class HoltWinters(object):
             raise ValueError("Length of data must be greater than largest season")
 
         # Let's init the seasonal factors and parameters
-        self.seasons = seasons
+        seasons = seasons
         _s_factors = []
-        print(_max_season)
         # Compute seasonal factors for each season
-        for season in self.seasons:
+        for season in seasons:
             _s_factors.append(
                 np.array([endog[per] / np.mean(endog[0:(season - 1)]) for per in range(season)]))
-
 
         _L = np.mean(endog[0:_max_season]) + np.sum([_s[-1] for _s in _s_factors])
 
         _B = (endog[_max_season] - endog[0]) / endog[_max_season][0] / _max_season
 
-        _Lm1 = _L
-        _Bm1 = _B
-
         y_hats = np.zeros(endog.shape[0])
         resids = np.zeros(endog.shape[0])
+        L = np.zeros(endog.shape[0])
+        B = np.zeros(endog.shape[0])
+        B[_max_season] = _B
+        L[_max_season] = _L
+
         # Iterative fit
         for t in range(endog.shape[0] - _max_season):
             # shift iteration to end of longest complete season
             t += _max_season
+            print(t)
 
             _st_pos = np.mod(np.ones(len(seasons)) * t, seasons)
 
             # Get an array of the respective seasonal factors
             _st = np.array([_s_factors[i][int(x)] for i, x in enumerate(_st_pos)])
 
-            _L = alpha * (endog[t] - np.sum(_st)) + ((1 - alpha) * (_L - _B))
+            _L = alpha * (endog[t] - np.sum(_st)) + ((1 - alpha) * (L[t-1] - B[t-1]))
 
-            _B = (beta * (_L - _Lm1)) + ((1 - beta) * _Bm1)
+            _B = (beta * (_L - L[t-1])) + ((1 - beta) * B[t-1])
 
-            _Bm1 = _B
-            _Lm1 = _L
+            for season, x in enumerate(_st_pos):
+                _s_factors[season][int(x)] = (gamma * (endog[t] - _L)) + ((1-gamma) * _s_factors[season][int(_st_pos)])
 
+
+            L[t] = _L
+            B[t] = _B
+
+            # Set the fitted value
             y_hats[t] = _L + _B + np.sum(_st)
 
+            # Capture the residual
             resids[t] = y_hats[t] - endog[t]
 
 
@@ -171,7 +179,6 @@ class HoltWinters(object):
                   's_factors': _s_factors,
                   'seasons': seasons}
 
-        print(resids)
 
-        return HoltWintersResults(y_hats, endog, index, params)
+        return HoltWintersResults(y_hats, resids, endog, index, params)
 
