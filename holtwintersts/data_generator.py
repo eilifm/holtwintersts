@@ -11,12 +11,20 @@ def rolling_window(a, window):
 
 def univ_seasonal_gen(seasons:list, trend:float, size:int, stdev:float, start_date='2000-01-01', scale=10):
     """
-    
+    Generate datasets that can be fit using Holt Winters multi-seasonal smoothing.
+
     Parameters
     ----------
-    season_lengths
-    trend
-    size
+    season_lengths: list
+
+    trend: float
+        Growth per period
+    size: int
+        Number of periods
+    stdev: float > 0
+        Standard deviation of noise in generated data
+
+    start_date: str ``YYYY-MM-DD``
 
     Returns
     -------

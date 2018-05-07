@@ -6,18 +6,40 @@ import numpy as np
 
 
 class HoltWintersResults(object):
+    """
+    Results class for HoltWinters
+
+    Attributes
+    ----------
+    fitted: array-like
+
+        y_hat values fitted by the model.
+
+    endog: array-like
+
+        Original data to which the model was fit.
+
+    index: pd.Index or array-like
+        Either the original data's DataFrame/Series index or ``list(range(len(original_data))``.
+
+    resids: array-like
+        Fitted data residuals.
+
+    alpha: float
+        Level estimate learning parameter
+    beta: float
+        Trend estimate learning parameter
+    gamma: float
+        Seasons estimate learning parameter
+    L:
+
+    B:
+
+
+    """
     def __init__(self, fitted_values, resids, endog, index, params):
-        """
 
-        Parameters
-        ----------
-        fitted_values
-        endog
-        index
-        params
-        """
         self.fitted = fitted_values
-
         self.endog = endog
         self.index = index
         self.resids = resids
@@ -65,45 +87,33 @@ class HoltWintersResults(object):
 
 
 class HoltWinters(object):
-    def __init__(self, endog=None, dates=None, freq=None, missing='none'):
-        """
-        Holt Winters model constructor
+    """
+    Implementation of Holt Winter's smoothing/forecasting supporting multiple seasonality.
 
-        Parameters
-        ----------
-        endog
-        dates
-        freq
-        missing
-        """
-        # endog = endog.copy()
-        #
-        # if endog.ndim == 1:
-        #     endog = endog[:, None]
-        #     self.endog = endog  # to get shapes right
-        #     self.index = list(range(endog.shape[0]))
-        #
-        # elif isinstance(endog, pd.DataFrame):
-        #     self.index = endog.index
-        #     self.endog = endog.values
-        # elif endog.ndim > 1 and endog.shape[1] != 1:
-        #     raise ValueError("Only the univariate case is implemented")
+    """
+    # def __init__(self, endog=None, dates=None, freq=None, missing='none'):
+    def __init__(self):
+        pass
 
     def fit(self, endog, seasons=None, alpha=None, beta=None, gamma=None, **kwargs):
         """
 
+
         Parameters
         ----------
-        seasons
-        alpha
-        beta
-        gamma
-        auto_param
+        endog: array-like
+            Timeseries to be fit by the model. 1d array-like including Numpy ndarray or Pandas Series.
+        seasons: list of ``int``
+
+        alpha: float ``(0,1)``
+
+        beta: float ``(0,1)``
+        gamma: float ``(0,1)``
         kwargs
 
         Returns
         -------
-        HoltWintersResults Object
+        Holt Winters model fit to ``endog`` :  HoltWintersResults
 
         """
         endog = endog.copy()

@@ -14,12 +14,12 @@ data = pd.read_csv('./ClothingSales.csv', index_col=0)
 
 #data['Sales'] = np.add(data['Sales'], np.random.normal(0, 5000, data.shape[0]))
 
-smallest_params = (.75, .5, .1)
-#smallest_params = (1, 1, 1)
+#smallest_params = (.75, .5, .1)
+smallest_params = (0, 0, 0)
 
 best_hw = HoltWinters().fit(data, [12], *smallest_params)
-
 print(mean_squared_error(data['Sales'].iloc[12::], best_hw.fitted[12::]))
+
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
 # ax.plot(univ_test_data[96::])
