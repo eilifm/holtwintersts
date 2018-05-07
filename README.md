@@ -8,6 +8,11 @@ A Python implementation of Holt-Winter's Exponential Smoothing and Forecasting i
 Write a simple to read yet complete implementation of Holt Winter's smoothing/forecasting
 for use by RIT students. This implementation should support multiple seasons. 
 
+# Documentation
+Unfortunately I cannot host the docs on GitHub pages at this time. To view documentation, 
+download this repository and open `docs/index.html` in your browser of choice.
+
+Docs of course can be built by `cd docs_gen && make html` from a bash shell. 
 
 # Implementation
 ## Currently Implemented (original scope)
@@ -16,11 +21,11 @@ for use by RIT students. This implementation should support multiple seasons.
 - [x] Additive seasonality
 
 ## Future Tasks for the Novice
-- [] Multiplicative seasonality
+- [ ] Multiplicative seasonality
 
 ## Future Tasks for the Ambitious
-- [] Statsmodels drop-in API compatibility[1]
-- [] Automatic DataFrame index management
+- [ ] Statsmodels drop-in API compatibility[1]
+- [ ] Automatic DataFrame index management
 
 
 ## Notes
