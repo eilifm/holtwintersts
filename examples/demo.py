@@ -23,7 +23,7 @@ for alpha in np.arange(.1, .9, .1):
     for beta in np.arange(.1, .9, .1):
         for gamma in np.arange(.1, .9, .1):
             best_hw = HoltWinters().fit(copy.deepcopy(data.values), [12], alpha, beta, gamma)
-            mse = mean_squared_error(data[12::], best_hw.fitted[12::])
+            mse = mean_squared_error(data['Sales'].iloc[12::], best_hw.fitted[12::])
             if mse < smallest_mse:
                 smallest_mse = mse
                 smallest_params = (copy.deepcopy(alpha), copy.deepcopy(beta), copy.deepcopy(gamma))
@@ -32,10 +32,11 @@ for alpha in np.arange(.1, .9, .1):
             del best_hw
 
 print(smallest_params)
+
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
 ax.plot(data)
-best_hw = HoltWinters().fit(data, [12], *smallest_params)
+best_hw = HoltWinters().fit(data['Sales'], [12], *smallest_params)
 
 ax.plot(pd.Series(best_hw.fitted, index=data.index))
 
