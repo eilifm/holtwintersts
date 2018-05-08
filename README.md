@@ -9,6 +9,9 @@ A Python implementation of Holt-Winter's Exponential Smoothing and Forecasting i
 Write a simple to read yet complete implementation of Holt Winter's smoothing/forecasting
 for use by RIT students. This implementation should support multiple seasons. 
 
+This was originally a school project by Eilif Mikkelsen. From time to time, contributions will continue to be made by the 
+original author and other members of the community. 
+
 # Documentation
 [Documentation of Github Pages Here](http://eilif.io/holtwintersts/)
 
