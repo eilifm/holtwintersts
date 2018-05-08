@@ -20,6 +20,8 @@ Be sure to commit a rebuild of the docs with a PR!
 2. Point a shell with your target Python environment to this repo's folder on your machine.
 3. `pip install .` or `python setup.py install` or `python3 setup.py install`
 
+# Examples
+A basic usage example can be found in `examples/demo.py`
 
 # Implementation
 ## Currently Implemented (original scope)
