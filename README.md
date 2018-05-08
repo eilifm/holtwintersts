@@ -1,5 +1,6 @@
 # Holt Winter's Time Series Forecasting
 
+TravisCI is only testing dependencies right now. 
 [![Build Status](https://travis-ci.org/eilifm/holtwintersts.svg?branch=master)](https://travis-ci.org/eilifm/holtwintersts)
 
 A Python implementation of Holt-Winter's Exponential Smoothing and Forecasting in Python.
