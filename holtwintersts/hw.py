@@ -211,5 +211,4 @@ class HoltWinters(object):
                   's_factors': _s_factors,
                   'seasons': seasons}
 
-        # return HoltWintersResults(y_hats, resids, endog, index, params)
-        return y_hats
+        return HoltWintersResults(y_hats, resids, endog, index, params)
