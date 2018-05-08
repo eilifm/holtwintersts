@@ -33,6 +33,7 @@ Be sure to commit a rebuild of the docs with a PR!
 ## Future Tasks for the Ambitious
 - [ ] Statsmodels drop-in API compatibility[1]
 - [ ] Automatic DataFrame index management
+- [ ] Automatic testing suite
 
 
 ## Notes
