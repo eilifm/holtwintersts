@@ -9,10 +9,11 @@ Write a simple to read yet complete implementation of Holt Winter's smoothing/fo
 for use by RIT students. This implementation should support multiple seasons. 
 
 # Documentation
-Unfortunately I cannot host the docs on GitHub pages at this time. To view documentation, 
-download this repository and open `docs/index.html` in your browser of choice.
+[Documentation of Github Pages Here](http://eilif.io/holtwintersts/)
 
 Docs of course can be built by `cd docs_gen && make html` from a bash shell. 
+
+Be sure to commit a rebuild of the docs with a PR!
 
 # Installation
 1. Download or clone this repository.
