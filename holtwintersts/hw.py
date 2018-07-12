@@ -1,112 +1,214 @@
-import statsmodels.api  as sm
 import pandas as pd
 import numpy as np
-from holtwintersts.data_generator import univ_seasonal_gen
+import copy
 
-from statsmodels.tsa.base.tsa_model import TimeSeriesModel, TimeSeriesModelResults
+class HoltWintersResults(object):
+    """
+    Results class for HoltWinters
+
+    Attributes
+    ----------
+    fitted: array-like
+
+        y_hat values fitted by the model.
+
+    endog: array-like
+
+        Original data to which the model was fit.
+
+    index: pd.Index or array-like
+        Either the original data's DataFrame/Series index or ``list(range(len(original_data))``.
+
+    resids: array-like
+        Fitted data residuals.
+
+    alpha: float
+        Level estimate learning parameter
+    beta: float
+        Trend estimate learning parameter
+    gamma: float
+        Seasons estimate learning parameter
+    L:
+        Final base level estimate
+
+    B:
+        Final trend estimate
+
+    """
+    def __init__(self, fitted_values, resids, endog, index, params):
+
+        self.fitted = fitted_values
+        self.endog = endog
+        self.index = index
+        self.resids = resids
+
+        if isinstance(index, pd.Index):
+            self.fitted = pd.DataFrame(self.fitted, index=self.index)
+            self.endog = pd.DataFrame(self.endog, index=self.index)
+
+        for k, v in params.items():
+            self.__setattr__(k, v)
 
 
-class HoltWinters(TimeSeriesModel):
-    def __init__(self, endog, dates=None, freq=None, missing='none'):
-        super(HoltWinters, self).__init__(endog, None, dates, freq, missing=missing)
+    def fitted_as_dataframe(self):
+        pass
 
-        endog = self.endog  # original might not have been an ndarray
-
-        if endog.ndim == 1:
-            endog = endog[:, None]
-            self.endog = endog  # to get shapes right
-        elif endog.ndim > 1 and endog.shape[1] != 1:
-            raise ValueError("Only the univariate case is implemented")
-
-
-    def fit(self, seasons=None, alpha=None, beta=None, gamma=None, auto_param=False, **kwargs):
+    def predict(self, num_oos):
         """
-        
+        Out of sample prediction as simply a number of points from the end of the training set. This method is NOT
+        index aware so, to plot, you will have to extend the dataframe index manually.
+
         Parameters
         ----------
-        seasons
-        alpha
-        beta
-        gamma
-        auto_param
+        num_oos: int
+            Number of periods out of sample to forecast
+
+        Returns
+        -------
+        array-like: ndarray or DataFrame
+
+
+        """
+        # for season in self.seasons:
+        #     _s_factors.append(
+        #         np.array([self.endog[per] / np.mean(self.endog[0:(season - 1)]) for per in range(season)]))
+
+        preds = np.zeros((num_oos,))
+        for samp in range(num_oos):
+            for s in range(len(self.seasons)):
+                # Access the correct seasonal factor
+                preds[samp] += self.s_factors[s][samp % len(self.s_factors[s])]
+
+            # Add in the level and trend components
+            preds[samp] += ((self.B * samp) + self.L)
+
+        return preds
+
+
+class HoltWinters(object):
+    """
+    Implementation of Holt Winter's smoothing/forecasting supporting multiple seasonality.
+
+    """
+    # def __init__(self, endog=None, dates=None, freq=None, missing='none'):
+    def __init__(self):
+        pass
+
+    def fit(self, endog, seasons=None, alpha=None, beta=None, gamma=None, **kwargs):
+        """
+
+
+        Parameters
+        ----------
+        endog: array-like
+            Timeseries to be fit by the model. 1d array-like including Numpy ndarray or Pandas Series.
+        seasons: list of ``int``
+
+        alpha: float ``(0,1)``
+
+        beta: float ``(0,1)``
+        gamma: float ``(0,1)``
         kwargs
 
         Returns
         -------
+        Holt Winters model fit to ``endog`` :  HoltWintersResults
 
         """
+        endog = copy.deepcopy(endog)
+        index = list(range(endog.shape[0]))
+
+        if endog.ndim == 1:
+            endog = endog[:, None]
+            index = list(range(endog.shape[0]))
+
+        elif isinstance(endog, pd.DataFrame):
+            index = endog.index
+            endog = endog.values
+
+        elif endog.ndim > 1 and endog.shape[1] != 1:
+            raise ValueError("Only the univariate case is implemented")
+
 
         _max_season = max(seasons)
-        if _max_season > self.endog.shape[0]:
+        if _max_season > endog.shape[0]:
             raise ValueError("Length of data must be greater than largest season")
 
         # Let's init the seasonal factors and parameters
-        self.seasons = seasons
+        seasons = seasons
         _s_factors = []
 
-        for season in self.seasons:
-             _s_factors.append(np.array([self.endog[per]/np.mean(self.endog[0:(season-1)]) for per in range(season)]))
+        # Initialize seasonal factors for each season
+        for season in seasons:
+            _s_factors.append(
+                np.array([endog[per] - np.mean(endog[0:(season - 1)]) for per in range(season)]))
 
-        _L = np.mean(self.endog[0:_max_season])+np.sum([_s[-1] for _s in _s_factors])
+        _L = np.mean(endog[0:_max_season]) + np.sum([_s[-1] for _s in _s_factors])
 
-        _B = (self.endog[_max_season] - self.endog[0])/self.endog[_max_season][0]/_max_season
+        _B = (endog[_max_season] - endog[0]) / endog[_max_season][0] / _max_season
 
-        _Lm1 = _L
-        _Bm1 = _B
+        y_hats = np.zeros(endog.shape[0])
+        resids = np.zeros(endog.shape[0])
+        L = np.zeros(endog.shape[0])
+        B = np.zeros(endog.shape[0])
+        B[_max_season] = _B
+        L[_max_season] = _L
 
-        y_hats = np.zeros(self.endog.shape[0])
+        # Iterative fit of y_hat components L, B, St
+        for t in np.arange(_max_season, endog.shape[0]):
+            # shift iteration to end of longest complete season
+            # t += _max_season
 
-        # Iterative fit
-        for t in range(self.endog.shape[0]-_max_season):
-            t += _max_season
+            # Get seasonal factor indexes
+            _st_pos = np.mod(np.ones(len(seasons)) * t, seasons)
 
-            _st_pos = np.mod(np.ones(len(seasons))*t, seasons)
-            _st = np.array([_s_factors[i][int(x)] for i,x in enumerate(_st_pos)])
+            # Get an array of the respective seasonal factors
+            _st = np.array([_s_factors[i][int(x)] for i, x in enumerate(_st_pos)])
 
-            _L = alpha*(self.endog[t]-np.sum(_st)) +  ((1-alpha)*(np.subtract(_L,_B)))
+            # Compute Lt
+            _L = (alpha * (endog[t] - np.sum(_st))) + ((1 - alpha) * (L[t-1] + B[t-1]))
 
-            _B = beta*(_L - _Lm1) + ((1-beta)*_Bm1)
+            # Compute Bt
+            _B = (beta * (_L - L[t-1])) + ((1 - beta) * B[t-1])
 
+            # Compute each St
+            for season, x in enumerate(_st_pos):
+                # print(season, x)
+                _s_factors[season][int(x)] = (gamma * (endog[t] - _L)) + ((1-gamma) * _s_factors[season][int(x)])
 
-            _Bm1 = _B
-            _Lm1 = _L
+            # Retrieve new St
+            # _st = np.array([_s_factors[i][int(x)] for i, x in enumerate(_st_pos)])
 
-            y_hats[t] = _L + _B + np.sum(_st)
+            # Update the running arrays of Lt and Bt values
+            # Get seasonal factor indexes
+            _st_pos = np.mod(np.ones(len(seasons)) * t, seasons)
 
-            self.fitted = y_hats
+            # Get an array of the respective seasonal factors
+            _st = np.array([_s_factors[i][int(x)] for i, x in enumerate(_st_pos)])
+            L[t] = _L
+            B[t] = _B
 
-        return HoltWintersResults(self, [_L, _B, _s_factors])
+        # Compute the y_hat and residuals
+        for t in np.arange(_max_season, endog.shape[0]):
 
+            # Get seasonal factor indexes
+            _st_pos = np.mod(np.ones(len(seasons)) * t, seasons)
 
-class HoltWintersResults(TimeSeriesModelResults):
-    def __init__(self, model, params, normalized_cov_params=None, scale=1.):
-        """
-        
-        Class to hold results from fitting a HoltWinters model.
+            # Get an array of the respective seasonal factors
+            _st = np.array([_s_factors[i][int(x)] for i, x in enumerate(_st_pos)])
 
-        Parameters
-        ----------
-        model : AR Model instance
-            Reference to the model that is fit.
-        params : array
-            The fitted parameters from the AR Model.
-        normalized_cov_params : array
-            inv(dot(X.T,X)) where X is the lagged values.
-        scale : float, optional
-            An estimate of the scale of the model.
-        """
+            # Set the fitted value
+            y_hats[t] = L[t] + B[t] + np.sum(_st)
 
-        super(HoltWintersResults, self).__init__(model, params, normalized_cov_params,
-                                        scale)
+            # # Capture the residual
+            # resids[t] = y_hats[t] - endog[t]
 
+        params = {'alpha': alpha,
+                  'beta': beta,
+                  'gamma': gamma,
+                  'L': _L,
+                  'B': _B,
+                  's_factors': _s_factors,
+                  'seasons': seasons}
 
-
-univ_test_data = univ_seasonal_gen([[6, 3], [12, 3]], .1, 120, .1, scale=10)
-
-
-#print([np.mean(univ_test_data.values[0::(i+1)]) for i in range(12)])
-
-
-hw1 = HoltWinters(univ_test_data)
-fitted_hw = hw1.fit([6, 12], .1, .5, .1)
-print(fitted_hw.model.fitted)
+        return HoltWintersResults(y_hats, resids, endog, index, params)

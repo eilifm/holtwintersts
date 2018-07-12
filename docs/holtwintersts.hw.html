@@ -1,0 +1,206 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>holtwintersts.hw module &#8212; HoltWintersTS 0.01 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">HoltWintersTS 0.01 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-holtwintersts.hw">
+<span id="holtwintersts-hw-module"></span><h1>holtwintersts.hw module<a class="headerlink" href="#module-holtwintersts.hw" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="holtwintersts.hw.HoltWinters">
+<em class="property">class </em><code class="descname">HoltWinters</code><a class="reference internal" href="_modules/holtwintersts/hw.html#HoltWinters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#holtwintersts.hw.HoltWinters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Implementation of Holt Winter’s smoothing/forecasting supporting multiple seasonality.</p>
+<dl class="method">
+<dt id="holtwintersts.hw.HoltWinters.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>endog</em>, <em>seasons=None</em>, <em>alpha=None</em>, <em>beta=None</em>, <em>gamma=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/holtwintersts/hw.html#HoltWinters.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#holtwintersts.hw.HoltWinters.fit" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>endog</strong> (<em>array-like</em>) – Timeseries to be fit by the model. 1d array-like including Numpy ndarray or Pandas Series.</li>
+<li><strong>seasons</strong> (list of <code class="docutils literal notranslate"><span class="pre">int</span></code>) – </li>
+<li><strong>alpha</strong> (float <code class="docutils literal notranslate"><span class="pre">(0,1)</span></code>) – </li>
+<li><strong>beta</strong> (float <code class="docutils literal notranslate"><span class="pre">(0,1)</span></code>) – </li>
+<li><strong>gamma</strong> (float <code class="docutils literal notranslate"><span class="pre">(0,1)</span></code>) – </li>
+<li><strong>kwargs</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>Holt Winters model fit to ``endog``</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#holtwintersts.hw.HoltWintersResults" title="holtwintersts.hw.HoltWintersResults">HoltWintersResults</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="holtwintersts.hw.HoltWintersResults">
+<em class="property">class </em><code class="descname">HoltWintersResults</code><span class="sig-paren">(</span><em>fitted_values</em>, <em>resids</em>, <em>endog</em>, <em>index</em>, <em>params</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/holtwintersts/hw.html#HoltWintersResults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#holtwintersts.hw.HoltWintersResults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Results class for HoltWinters</p>
+<dl class="attribute">
+<dt id="holtwintersts.hw.HoltWintersResults.fitted">
+<code class="descname">fitted</code><a class="headerlink" href="#holtwintersts.hw.HoltWintersResults.fitted" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>array-like</em> – y_hat values fitted by the model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="holtwintersts.hw.HoltWintersResults.endog">
+<code class="descname">endog</code><a class="headerlink" href="#holtwintersts.hw.HoltWintersResults.endog" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>array-like</em> – Original data to which the model was fit.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="holtwintersts.hw.HoltWintersResults.index">
+<code class="descname">index</code><a class="headerlink" href="#holtwintersts.hw.HoltWintersResults.index" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>pd.Index or array-like</em> – Either the original data’s DataFrame/Series index or <code class="docutils literal notranslate"><span class="pre">list(range(len(original_data))</span></code>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="holtwintersts.hw.HoltWintersResults.resids">
+<code class="descname">resids</code><a class="headerlink" href="#holtwintersts.hw.HoltWintersResults.resids" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>array-like</em> – Fitted data residuals.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="holtwintersts.hw.HoltWintersResults.alpha">
+<code class="descname">alpha</code><a class="headerlink" href="#holtwintersts.hw.HoltWintersResults.alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> – Level estimate learning parameter</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="holtwintersts.hw.HoltWintersResults.beta">
+<code class="descname">beta</code><a class="headerlink" href="#holtwintersts.hw.HoltWintersResults.beta" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> – Trend estimate learning parameter</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="holtwintersts.hw.HoltWintersResults.gamma">
+<code class="descname">gamma</code><a class="headerlink" href="#holtwintersts.hw.HoltWintersResults.gamma" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> – Seasons estimate learning parameter</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="holtwintersts.hw.HoltWintersResults.L">
+<code class="descname">L</code><a class="headerlink" href="#holtwintersts.hw.HoltWintersResults.L" title="Permalink to this definition">¶</a></dt>
+<dd><p>Final base level estimate</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="holtwintersts.hw.HoltWintersResults.B">
+<code class="descname">B</code><a class="headerlink" href="#holtwintersts.hw.HoltWintersResults.B" title="Permalink to this definition">¶</a></dt>
+<dd><p>Final trend estimate</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="holtwintersts.hw.HoltWintersResults.fitted_as_dataframe">
+<code class="descname">fitted_as_dataframe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/holtwintersts/hw.html#HoltWintersResults.fitted_as_dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#holtwintersts.hw.HoltWintersResults.fitted_as_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="holtwintersts.hw.HoltWintersResults.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>num_oos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/holtwintersts/hw.html#HoltWintersResults.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#holtwintersts.hw.HoltWintersResults.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Out of sample prediction as simply a number of points from the end of the training set. This method is NOT
+index aware so, to plot, you will have to extend the dataframe index manually.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>num_oos</strong> (<em>int</em>) – Number of periods out of sample to forecast</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>array-like</strong></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">ndarray or DataFrame</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/holtwintersts.hw.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">HoltWintersTS 0.01 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Eilif Mikkelsen.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4.
+    </div>
+  </body>
+</html>
